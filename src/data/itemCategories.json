@@ -1,0 +1,249 @@
+[
+	{
+		"id": "weapon.onemelee",
+		"types": [
+			"Ethereal Blade",
+			"Glass Shank",
+			"Crone Knife",
+			"Simple Dagger",
+			"Skinning Knife",
+			"Moon Dagger",
+			"Engraved Knife",
+			"Obsidian Dagger",
+			"Bloodletting Dagger",
+			"Mail Breaker",
+			"Kris Knife",
+			"Parrying Dagger",
+			"Arcane Dirk",
+			"Cinquedea"
+		]
+	},
+	{
+		"id": "weapon.claw",
+		"types": "Claw"
+	},
+	{
+		"id": "weapon.dagger",
+		"types": "Dagger"
+	},
+	{
+		"id": "weapon.onesword",
+		"types": "One-Handed Sword"
+	},
+	{
+		"id": "weapon.oneaxe",
+		"types": "One-Handed Axe"
+	},
+	{
+		"id": "weapon.onemace",
+		"types": "One-Handed Mace"
+	},
+	{
+		"id": "weapon.spear",
+		"types": "Spear"
+	},
+	{
+		"id": "weapon.flail",
+		"types": "Flail"
+	},
+	{
+		"id": "weapon.twomelee",
+		"types": "Any Two-Handed Melee Weapon"
+	},
+	{
+		"id": "weapon.twosword",
+		"types": "Two-Handed Sword"
+	},
+	{
+		"id": "weapon.twoaxe",
+		"types": "Two-Handed Axe"
+	},
+	{
+		"id": "weapon.twomace",
+		"types": "Two-Handed Mace"
+	},
+	{
+		"id": "weapon.warstaff",
+		"types": "Warstaff"
+	},
+	{
+		"id": "weapon.ranged",
+		"types": "Any Ranged Weapon"
+	},
+	{
+		"id": "weapon.bow",
+		"types": "Bow"
+	},
+	{
+		"id": "weapon.crossbow",
+		"types": "Crossbow"
+	},
+	{
+		"id": "weapon.caster",
+		"types": "Any Caster Weapon"
+	},
+	{
+		"id": "weapon.wand",
+		"types": "Wand"
+	},
+	{
+		"id": "weapon.sceptre",
+		"types": "Sceptre"
+	},
+	{
+		"id": "weapon.staff",
+		"types": "Staff"
+	},
+	{
+		"id": "weapon.rod",
+		"types": "Fishing Rod"
+	},
+	{
+		"id": "armour",
+		"types": "Any Armour"
+	},
+	{
+		"id": "armour.helmet",
+		"types": "Helmet"
+	},
+	{
+		"id": "armour.chest",
+		"types": "Body Armour"
+	},
+	{
+		"id": "armour.gloves",
+		"types": "Gloves"
+	},
+	{
+		"id": "armour.boots",
+		"types": "Boots"
+	},
+	{
+		"id": "armour.quiver",
+		"types": "Quiver"
+	},
+	{
+		"id": "armour.shield",
+		"types": "Shield"
+	},
+	{
+		"id": "armour.focus",
+		"types": "Focus"
+	},
+	{
+		"id": "armour.buckler",
+		"types": "Buckler"
+	},
+	{
+		"id": "accessory",
+		"types": "Any Accessory"
+	},
+	{
+		"id": "accessory.amulet",
+		"types": "Amulet"
+	},
+	{
+		"id": "accessory.belt",
+		"types": "Belt"
+	},
+	{
+		"id": "accessory.ring",
+		"types": "Ring"
+	},
+	{
+		"id": "gem",
+		"types": "Any Gem"
+	},
+	{
+		"id": "gem.activegem",
+		"types": "Skill Gem"
+	},
+	{
+		"id": "gem.supportgem",
+		"types": "Support Gem"
+	},
+	{
+		"id": "gem.metagem",
+		"types": "Meta Gem"
+	},
+	{
+		"id": "jewel",
+		"types": "Any Jewel"
+	},
+	{
+		"id": "flask",
+		"types": "Any Flask"
+	},
+	{
+		"id": "flask.life",
+		"types": "Life Flask"
+	},
+	{
+		"id": "flask.mana",
+		"types": "Mana Flask"
+	},
+	{
+		"id": "map",
+		"types": "Any Endgame Item"
+	},
+	{
+		"id": "map.waystone",
+		"types": "Waystone"
+	},
+	{
+		"id": "map.fragment",
+		"types": "Map Fragment"
+	},
+	{
+		"id": "map.logbook",
+		"types": "Logbook"
+	},
+	{
+		"id": "map.breachstone",
+		"types": "Breachstone"
+	},
+	{
+		"id": "map.barya",
+		"types": "Barya"
+	},
+	{
+		"id": "map.bosskey",
+		"types": "Pinnacle Key"
+	},
+	{
+		"id": "map.ultimatum",
+		"types": "Ultimatum Key"
+	},
+	{
+		"id": "map.tablet",
+		"types": "Tablet"
+	},
+	{
+		"id": "card",
+		"types": "Divination Card"
+	},
+	{
+		"id": "sanctum.relic",
+		"types": "Relic"
+	},
+	{
+		"id": "currency",
+		"types": "Any Currency"
+	},
+	{
+		"id": "currency.omen",
+		"types": "Omen"
+	},
+	{
+		"id": "currency.socketable",
+		"types": "Any Socketable"
+	},
+	{
+		"id": "currency.rune",
+		"types": "Rune"
+	},
+	{
+		"id": "currency.soulcore",
+		"types": "Soul Core"
+	}
+]
