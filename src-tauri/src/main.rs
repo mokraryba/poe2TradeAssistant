@@ -7,26 +7,37 @@ use proxy::proxy_request;
 
 fn main() {
     tauri::Builder::default()
+        // .setup(|app| {
+        //     let window = app.get_webview_window("main").unwrap();
+        //     window.set_decorations(false).unwrap();
+        //     #[cfg(target_os = "windows")]
+        //     window.set_shadow(false).unwrap();
+        //     Ok(())
+        // })
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(tauri_plugin_clipboard_manager::init())
-        .invoke_handler(tauri::generate_handler![send_copy_command, clear_clipboard, proxy_request])
-
+        .invoke_handler(tauri::generate_handler![
+            send_copy_command,
+            clear_clipboard,
+            proxy_request,
+            is_poe_active
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
-
+use tauri::Manager;
 use windows::Win32::UI::Input::KeyboardAndMouse::{
-    INPUT, INPUT_0, INPUT_KEYBOARD, KEYBDINPUT, SendInput, 
-    VIRTUAL_KEY, KEYBD_EVENT_FLAGS
+    SendInput, INPUT, INPUT_0, INPUT_KEYBOARD, KEYBDINPUT, KEYBD_EVENT_FLAGS, VIRTUAL_KEY,
 };
-
-
 
 #[tauri::command]
 fn send_copy_command() {
     unsafe {
+        OpenClipboard(None);
+        EmptyClipboard();
+        CloseClipboard();
         let mut inputs = vec![
             // Press CTRL
             INPUT {
@@ -85,7 +96,9 @@ fn send_copy_command() {
     }
 }
 
-use windows::Win32::System::DataExchange::{OpenClipboard, EmptyClipboard, CloseClipboard};
+use windows::Win32::System::DataExchange::{CloseClipboard, EmptyClipboard, OpenClipboard};
+use windows::Win32::UI::WindowsAndMessaging::GetForegroundWindow;
+use windows::Win32::UI::WindowsAndMessaging::GetWindowTextW;
 
 #[tauri::command]
 fn clear_clipboard() {
@@ -93,5 +106,19 @@ fn clear_clipboard() {
         OpenClipboard(None);
         EmptyClipboard();
         CloseClipboard();
+    }
+}
+
+#[tauri::command]
+fn is_poe_active() -> bool {
+    unsafe {
+        let hwnd = GetForegroundWindow();
+        let mut text: [u16; 512] = [0; 512];
+        GetWindowTextW(hwnd, &mut text);
+        let window_title = String::from_utf16_lossy(&text)
+            .trim_matches('\0')
+            .to_string();
+
+        window_title.contains("Path of Exile") || window_title.contains("PoE Price Check")
     }
 }

@@ -1,12 +1,11 @@
 import { SelectedMod } from "../components/PriceCheck";
 import { ParsedItem } from "../hooks/useItemParse";
 
-export function buildSearchQuery(item: ParsedItem, selectedMods: SelectedMod[]) {
+export function buildSearchQuery(item: ParsedItem, selectedMods: SelectedMod[], forceName: boolean, isCurrency: boolean = false) {
 
 	let query: any = {
 		query: {
 			status: { option: "online" },
-			// name: item.base,
 			// type: item.type,
 			stats: [{
 				type: "and",
@@ -28,6 +27,18 @@ export function buildSearchQuery(item: ParsedItem, selectedMods: SelectedMod[]) 
 
 		},
 		sort: { price: "asc" }
+	}
+	if (forceName) {
+		query.query.type = item.name
+	}
+
+	if (item.rarity == "Unique") {
+		query.query.type = item.base
+		query.query.name = item.name
+	}
+
+	if (isCurrency) {
+		delete query.query.filters.type_filters.filters.category
 	}
 
 	if (item.rarity == "Unique") {

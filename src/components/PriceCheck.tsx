@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Window } from '@tauri-apps/api/window';
-import { ParsedItem, formatText, parseFullItem } from '../hooks/useItemParse';
-import { fetchItems, searchItems } from '../lib/proxy';
+import { ParsedItem, parseFullItem } from '../hooks/useItemParse';
+import { fetchItems, searchBulkItems, searchItems } from '../lib/proxy';
 import { buildSearchQuery } from '../lib/searchBuilder';
 import { TradeItem } from '../types/items';
 import currency from '../data/currency.json'
+import { ExchangeItem } from '../types/exchangeItems';
+import DisplayBulkItems from './DisplayBulkItems';
+import DisplayTradeitems from './DisplayTradeitems';
 
 export interface SelectedMod {
 	value: number;
@@ -26,16 +29,26 @@ export default function PriceCheck() {
 	)
 
 	const [tradeItems, setTradeItems] = useState<TradeItem[]>([]);
-
+	const [tradeBulkItems, setTradeBulkItems] = useState<ExchangeItem>();
 	const [searchItemsData, setSearchItemsData] = useState<any>({
 		id: "",
 		result: [],
 		total: 0,
 		current: 0
 	});
-
 	const [selectedMods, setSelectedMods] = useState<SelectedMod[]>([])
-	// const [selectItemType, setSelectItemType] = useState(false)
+
+	// useEffect(() => {
+	// 	const onBlur = () => {
+	// 		let window = Window.getCurrent();
+	// 		window.close();
+	// 	}
+	// 	window.addEventListener("blur", onBlur)
+
+	// 	return () => {
+	// 		window.removeEventListener("blur", onBlur)
+	// 	}
+	// }, []);
 
 	useEffect(() => {
 		try {
@@ -77,6 +90,9 @@ export default function PriceCheck() {
 		if (!itemData) return;
 		console.log({ itemData })
 		setSelectedMods(itemData.mods.map(mod => ({ text: mod.raw, id: mod.id, value: mod.value, checked: false })))
+		if (itemData.type == "currency") {
+			searchBulk(itemData.name)
+		}
 	}, [itemData])
 
 	const handleModChange = (mod: SelectedMod, value: string) => {
@@ -105,10 +121,42 @@ export default function PriceCheck() {
 		));
 	}
 
+	const searchBulk = async (name: string) => {
+		let foundName = currency.find(c => c.text == name)?.id || name
+		let qr = {
+			"query": {
+				"status": {
+					"option": "online"
+				},
+				"have": [
+					"exalted"
+				],
+				"want": [
+					foundName
+				]
+			},
+			"sort": {
+				"have": "asc"
+			},
+			"engine": "new"
+		}
+		let data = await searchBulkItems(qr)
+		setTradeBulkItems(data)
+	}
+
 	const search = async () => {
 		try {
 			// Example search query for unique items
-			const query = buildSearchQuery(itemData, selectedMods);
+			let forceItemName = false;
+			let isCurrency = false;
+			if (itemData.type == "currency") {
+				forceItemName = true;
+				isCurrency = true;
+				let foundCurrencyItem = currency.find(c => c.text == itemData.name)
+				if (foundCurrencyItem)
+					return await searchBulk(itemData.name)
+			}
+			const query = buildSearchQuery(itemData, selectedMods, forceItemName, isCurrency);
 			console.log(query)
 			const searchResult = await searchItems(query);
 			console.log(searchResult)
@@ -124,20 +172,6 @@ export default function PriceCheck() {
 		} catch (error) {
 			console.error('Search failed:', error);
 		}
-	}
-
-	const displayTradeSearch = () => {
-		return tradeItems.map((item, index) => {
-			let foundCurrIcon = `https://www.pathofexile.com` + currency.find(c => c.id == item.listing.price.currency)?.image || ""
-
-			return <div className='flex items-center border-b-2 border-[#333]' key={index}>
-				<img style={{ height: "64px" }} src={item.item.icon} />
-				<div className='flex-1 ml-3'>
-					{item.item.explicitMods.map((mod, index) => <div key={index}>{formatText(mod)}</div>)}
-				</div>
-				{item.listing.price.amount} <img style={{ width: "32px", height: "32px" }} src={foundCurrIcon} />
-			</div>
-		})
 	}
 
 	const loadMore = async () => {
@@ -156,7 +190,7 @@ export default function PriceCheck() {
 	}
 
 	return (
-		<div className="bg-gray-900/95 text-white p-4 rounded-lg shadow-lg h-[100vh] flex flex-col">
+		<div className="bg-gray-900/70 text-white p-4 rounded-lg shadow-lg h-[100vh] flex flex-col border border-gray-700">
 			<div className="flex justify-between items-center mb-4">
 				<h2 className="text-xl font-bold">Price Check</h2>
 				<button
@@ -178,25 +212,19 @@ export default function PriceCheck() {
 							itemData.rarity == "Rare" ? "text-yellow-400" :
 								"text-white"
 
-							}`}>{itemData.base}</span>
+							} text-center`}>{itemData.name} <br />{itemData.name != itemData.base && itemData.base}</span>
 						<button onClick={search} className="bg-orange-400 p-1 rounded-lg text-[#333] border border-orange-300 transition-all hover:bg-orange-600 hover:border-orange-500">Check</button>
 						{tradeItems.length > 0 && <button onClick={openWebsite} className="bg-orange-400 p-1 rounded-lg text-[#333] border border-orange-300 transition-all hover:bg-orange-600 hover:border-orange-500">Open website</button>}
 					</div>
 
-					{/* <span>{itemData.type}</span> */}
-
 					{displayMods()}
 				</div>
-
-
-
-
-				{/* Add price display components here */}
 			</div>
 
 			<div className="bg-gray-800 p-2 rounded flex flex-col gap-2 overflow-y-auto mt-2">
 				{/* {JSON.stringify(itemData, null, 2)} */}
-				{displayTradeSearch()}
+				<DisplayTradeitems tradeItems={tradeItems} />
+				{tradeBulkItems && <DisplayBulkItems items={tradeBulkItems} />}
 				{tradeItems.length > 0 && <button onClick={loadMore}>Load more</button>}
 			</div>
 		</div>

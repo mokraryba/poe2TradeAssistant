@@ -3,7 +3,7 @@ import mods from '../data/mods.json'
 export interface ParsedItem {
 	name: string
 	base: string
-	rarity: 'Normal' | 'Magic' | 'Rare' | 'Unique'
+	rarity: 'Normal' | 'Magic' | 'Rare' | 'Unique' | "Currency"
 	itemLevel: number
 	type: string
 	mods: Mod[]
@@ -43,6 +43,7 @@ const parseClass = (baseClass: string) => {
 	if (baseClass == "Gloves") return "armour.gloves"
 	if (baseClass == "Bucklers") return "armour.buckler"
 	if (baseClass == "Focuses") return "armour.focus"
+	if (baseClass == "Shields") return "armour.shield"
 
 	if (baseClass == "Belts") return "accessory.belt"
 	if (baseClass == "Rings") return "accessory.ring"
@@ -82,7 +83,7 @@ export function parseFullItem(itemText: string): ParsedItem {
 	// Extract basic item info
 	const headerSection = sections[0].trim().split('\n')
 	let itemClass = headerSection[0].replace('Item Class: ', '')
-	const rarity = headerSection[1].replace('Rarity: ', '') as 'Normal' | 'Magic' | 'Rare' | 'Unique'
+	const rarity = headerSection[1].replace('Rarity: ', '') as 'Normal' | 'Magic' | 'Rare' | 'Unique' | "Currency"
 	const name = headerSection[2].trim()
 	const base = headerSection.slice(-1)[0].trim()
 
@@ -95,7 +96,9 @@ export function parseFullItem(itemText: string): ParsedItem {
 	const mods = modSection ? parseModSection(modSection) : []
 	console.log({ mods })
 
-	itemClass = parseClass(itemClass)
+	if (rarity == "Currency") itemClass = "Currency"
+	else
+		itemClass = parseClass(itemClass)
 
 	return {
 		name,

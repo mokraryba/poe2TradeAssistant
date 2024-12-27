@@ -1,6 +1,6 @@
+use reqwest::Method;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use reqwest::Method;
 use tauri::command;
 
 const PROXY_HOSTS: &[(&str, bool)] = &[
@@ -29,10 +29,7 @@ pub struct ProxyRequest {
 
 #[command]
 pub async fn proxy_request(request: ProxyRequest) -> Result<ProxyResponse, String> {
-    let host = request.url
-        .split('/')
-        .nth(2)
-        .ok_or("Invalid URL")?;
+    let host = request.url.split('/').nth(2).ok_or("Invalid URL")?;
 
     if !PROXY_HOSTS.iter().any(|(h, _)| *h == host) {
         return Err("Unauthorized host".to_string());
@@ -40,10 +37,7 @@ pub async fn proxy_request(request: ProxyRequest) -> Result<ProxyResponse, Strin
 
     let mut filtered_headers = request.headers;
     filtered_headers.retain(|key, _| {
-        !key.starts_with("sec-") && 
-        key != "host" && 
-        key != "origin" && 
-        key != "content-length"
+        !key.starts_with("sec-") && key != "host" && key != "origin" && key != "content-length"
     });
 
     let method = match request.method.to_uppercase().as_str() {
@@ -78,10 +72,7 @@ pub async fn proxy_request(request: ProxyRequest) -> Result<ProxyResponse, Strin
         req_builder = req_builder.body(body);
     }
 
-    let response = req_builder
-        .send()
-        .await
-        .map_err(|e| e.to_string())?;
+    let response = req_builder.send().await.map_err(|e| e.to_string())?;
 
     let status = response.status().as_u16();
     let headers = response
@@ -89,10 +80,7 @@ pub async fn proxy_request(request: ProxyRequest) -> Result<ProxyResponse, Strin
         .iter()
         .map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string()))
         .collect();
-    let body = response
-        .text()
-        .await
-        .map_err(|e| e.to_string())?;
+    let body = response.text().await.map_err(|e| e.to_string())?;
 
     Ok(ProxyResponse {
         status,

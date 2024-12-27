@@ -27,6 +27,8 @@
     "http:allow-fetch-send",
     "http:allow-fetch-cancel",
     "http:allow-fetch-read-body",
+    "core:window:allow-set-focus",
+    "core:webview:allow-set-webview-focus",
     {
       "identifier": "http:default",
       "allow": [

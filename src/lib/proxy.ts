@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
 import { TradeItem } from '../types/items';
+import { ExchangeItem } from '../types/exchangeItems';
 
 export interface SearchResult {
 	id: string;
@@ -22,6 +23,13 @@ export interface FetchItemsResult {
 			// Add more item properties as needed
 		};
 	}>;
+}
+
+export async function searchBulkItems(query: any): Promise<ExchangeItem> {
+	return await fetchFromPoe('/api/trade2/exchange/poe2/Standard', {
+		method: 'POST',
+		body: query,
+	});
 }
 
 export async function searchItems(query: any): Promise<SearchResult> {

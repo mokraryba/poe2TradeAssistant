@@ -2,6 +2,7 @@
   "name": "poe-trade",
   "private": true,
   "version": "0.1.0",
+  "author": "Mokraryba",
   "type": "module",
   "scripts": {
     "dev": "vite",
